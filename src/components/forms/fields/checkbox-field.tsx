@@ -64,7 +64,7 @@ export function CheckboxField({
         />
 
         {label || Icon ? (
-          <div className="flex items-center gap-2 text-sm font-medium leading-tight tracking-wide text-foreground">
+          <div className="flex items-center gap-2 text-[length:var(--text-body-sm)] font-medium leading-tight tracking-wide text-foreground">
             {Icon && iconPosition === 'left' ? (
               <Icon size={16} className="text-muted-foreground" />
             ) : null}

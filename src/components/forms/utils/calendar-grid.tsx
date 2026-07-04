@@ -14,6 +14,7 @@ export interface CalendarGridProps {
   onChange: (date: CalendarDateValue) => void
   min?: CalendarDateValue | null
   max?: CalendarDateValue | null
+  embedded?: boolean
 }
 
 const MONTHS = [
@@ -33,7 +34,7 @@ const MONTHS = [
 
 const DAYS_SHORT = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']
 
-export function CalendarGrid({ value, onChange, min, max }: CalendarGridProps) {
+export function CalendarGrid({ value, onChange, min, max, embedded = false }: CalendarGridProps) {
   const defaultDate = value || today()
   const [viewDate, setViewDate] = useState<CalendarDateValue>(defaultDate)
 
@@ -80,7 +81,12 @@ export function CalendarGrid({ value, onChange, min, max }: CalendarGridProps) {
   const isToday = (date: CalendarDateValue) => compareDates(date, today()) === 0
 
   return (
-    <div className="w-[280px] select-none rounded-lg border border-border bg-card p-2 text-foreground">
+    <div
+      className={cn(
+        'w-[300px] select-none text-foreground',
+        embedded ? 'p-0' : 'rounded-lg border border-border bg-card p-2',
+      )}
+    >
       <div className="mb-4 flex items-center justify-between">
         <div className="flex gap-1">
           <button
@@ -129,18 +135,18 @@ export function CalendarGrid({ value, onChange, min, max }: CalendarGridProps) {
         </div>
       </div>
 
-      <div className="mb-2 grid grid-cols-7 gap-1 text-center">
+      <div className="mb-2 grid grid-cols-7 gap-1.5 text-center">
         {DAYS_SHORT.map((d) => (
           <span
             key={d}
-            className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground"
+            className="text-xs font-semibold uppercase tracking-wider text-muted-foreground"
           >
             {d}
           </span>
         ))}
       </div>
 
-      <div className="grid grid-cols-7 gap-1" role="grid">
+      <div className="grid grid-cols-7 gap-1.5" role="grid">
         {gridCells.map(({ date, isCurrentMonth }, idx) => {
           const disabled = isDateDisabled(date)
           const selected = isSelected(date)
@@ -153,7 +159,7 @@ export function CalendarGrid({ value, onChange, min, max }: CalendarGridProps) {
               disabled={disabled}
               onClick={() => !disabled && onChange(date)}
               className={cn(
-                'flex h-8 w-8 items-center justify-center rounded-lg text-xs transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+                'flex h-9 w-9 items-center justify-center rounded-lg text-xs transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-ring',
                 !isCurrentMonth && 'text-muted-foreground',
                 isCurrentMonth &&
                   !selected &&

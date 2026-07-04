@@ -82,7 +82,7 @@ export function SelectField({
           name={name}
           aria-invalid={error ? 'true' : 'false'}
           aria-describedby={error ? `${id}-error` : hint ? `${id}-hint` : undefined}
-          className={cn(fieldTriggerBase, 'h-10', error && fieldInputError)}
+          className={cn(fieldTriggerBase, error && fieldInputError)}
         >
           <SelectValue placeholder={placeholder}>
             {selectedOption ? (

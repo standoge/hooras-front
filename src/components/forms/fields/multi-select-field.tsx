@@ -3,7 +3,7 @@ import { FieldWrapper } from '../field-wrapper'
 import {
   fieldOptionDefault,
   fieldOptionSelected,
-  fieldTriggerBase,
+  fieldTriggerMultiBase,
   fieldInputError,
   fieldInputBase,
 } from '../field-styles'
@@ -140,9 +140,9 @@ export function MultiSelectField({
           <PopoverTrigger asChild disabled={disabled}>
             <button
               type="button"
-              className={cn(fieldTriggerBase, 'min-h-10 p-2', error && fieldInputError)}
+              className={cn(fieldTriggerMultiBase, error && fieldInputError)}
             >
-              <div className="mr-2 flex max-w-full flex-wrap items-center gap-1.5">
+              <div className="mr-2 flex min-w-0 flex-1 flex-wrap items-center gap-1.5">
                 {selectedOptions.length === 0 ? (
                   <span className="pl-1 text-muted-foreground">{placeholder}</span>
                 ) : (
@@ -192,7 +192,7 @@ export function MultiSelectField({
                 />
               </div>
 
-              <div className="flex flex-1 flex-col gap-0.5 overflow-y-auto">
+              <div className="scrollbar-thin flex flex-1 flex-col gap-0.5 overflow-y-auto">
                 {filteredOptions.length === 0 ? (
                   <div className="p-2 text-center text-xs text-muted-foreground">
                     No options match search

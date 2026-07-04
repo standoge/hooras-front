@@ -123,7 +123,7 @@ export function ComboboxField({
               type="button"
               className={cn(fieldTriggerBase, error && fieldInputError)}
             >
-              <div className="mr-2 flex items-center gap-2 truncate">
+              <div className="mr-2 flex min-w-0 flex-1 items-center gap-2 truncate">
                 {selectedOption?.image ? (
                   <img
                     src={selectedOption.image}
@@ -171,7 +171,7 @@ export function ComboboxField({
                 />
               </div>
 
-              <div className="flex flex-1 flex-col gap-0.5 overflow-y-auto">
+              <div className="scrollbar-thin flex flex-1 flex-col gap-0.5 overflow-y-auto">
                 {filteredOptions.length === 0 ? (
                   <div className="p-2 text-center text-xs text-muted-foreground">
                     No options match search

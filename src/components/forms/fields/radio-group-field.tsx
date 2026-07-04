@@ -78,7 +78,7 @@ export function RadioGroupField({
               <RadioGroupItem value={String(opt.value)} id={optId} />
               <Label
                 htmlFor={optId}
-                className="flex cursor-pointer items-center gap-2 text-sm font-medium tracking-wide text-foreground"
+                className="flex cursor-pointer items-center gap-2 text-[length:var(--text-body-sm)] font-medium tracking-wide text-foreground"
               >
                 {Icon ? <Icon size={16} className="text-muted-foreground" /> : null}
                 <span>{opt.label}</span>

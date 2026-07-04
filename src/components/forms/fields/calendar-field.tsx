@@ -96,8 +96,9 @@ export function CalendarField({
               <CalendarIcon size={16} className="text-muted-foreground" />
             </button>
           </PopoverTrigger>
-          <PopoverContent align="start" className="w-auto p-2">
+          <PopoverContent align="start" className="w-auto p-3">
             <CalendarGrid
+              embedded
               value={currentDate}
               onChange={handleSelectDate}
               min={minDate}

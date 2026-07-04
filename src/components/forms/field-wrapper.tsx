@@ -1,4 +1,5 @@
 import { type ElementType, type ReactNode } from 'react'
+import { fieldStackGap } from './field-styles'
 import { cn } from '@/lib/utils'
 
 export interface FieldWrapperProps {
@@ -30,7 +31,7 @@ export function FieldWrapper({
     <div
       className={cn(
         'group/field flex w-full',
-        inline ? 'flex-row items-center gap-4 py-1' : 'flex-col gap-1.5',
+        inline ? 'flex-row items-center gap-4 py-1' : cn('flex-col', fieldStackGap),
         disabled && 'pointer-events-none opacity-60',
       )}
     >
@@ -48,7 +49,7 @@ export function FieldWrapper({
         </label>
       ) : null}
 
-      <div className={cn('flex flex-1 flex-col gap-1.5', inline ? 'w-[70%]' : 'w-full')}>
+      <div className={cn('flex flex-1 flex-col', fieldStackGap, inline ? 'w-[70%]' : 'w-full')}>
         {children}
 
         {error ? (

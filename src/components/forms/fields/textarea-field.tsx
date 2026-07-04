@@ -1,6 +1,6 @@
 import { forwardRef, useId, type ComponentPropsWithRef } from 'react'
 import { FieldWrapper } from '../field-wrapper'
-import { fieldInputBase, fieldInputError } from '../field-styles'
+import { fieldInputError, fieldTextareaBase } from '../field-styles'
 import { cn } from '@/lib/utils'
 
 export interface TextareaFieldProps extends Omit<ComponentPropsWithRef<'textarea'>, 'onChange'> {
@@ -61,7 +61,7 @@ export const TextareaField = forwardRef<HTMLTextAreaElement, TextareaFieldProps>
           onChange={handleChange}
           aria-invalid={error ? 'true' : 'false'}
           aria-describedby={error ? `${id}-error` : hint ? `${id}-hint` : undefined}
-          className={cn(fieldInputBase, 'resize-y', error && fieldInputError, className)}
+          className={cn(fieldTextareaBase, 'resize-y', error && fieldInputError, className)}
           {...props}
         />
       </FieldWrapper>

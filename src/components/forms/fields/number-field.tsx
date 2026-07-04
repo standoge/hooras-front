@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState } from 'react'
+import { useEffect, useId, useRef, useState, type ChangeEvent, type KeyboardEvent } from 'react'
 import { FieldWrapper } from '../field-wrapper'
 import { fieldInputBase, fieldInputError } from '../field-styles'
 import { Minus, Plus } from 'lucide-react'
@@ -17,6 +17,20 @@ export interface NumberFieldProps {
   step?: number
   name?: string
   onChange?: (e: { target: { name: string; value: number }; persist: () => void }) => void
+}
+
+const PARTIAL_NUMBER_PATTERN = /^-?\d*\.?\d*$/
+
+function clampNumber(val: number, min?: number, max?: number) {
+  let next = val
+  if (min !== undefined && next < min) next = min
+  if (max !== undefined && next > max) next = max
+  return next
+}
+
+function formatNumber(val: number, step: number) {
+  const decimalPlaces = (step.toString().split('.')[1] || '').length
+  return decimalPlaces > 0 ? Number.parseFloat(val.toFixed(decimalPlaces)) : val
 }
 
 export function NumberField({
@@ -39,22 +53,28 @@ export function NumberField({
   const [internalVal, setInternalVal] = useState<number>(defaultValue)
   const currentVal = value !== undefined ? value : internalVal
 
+  const [isEditing, setIsEditing] = useState(false)
+  const [draft, setDraft] = useState('')
+
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
-  const handleUpdate = (direction: 'increment' | 'decrement') => {
-    let nextVal = direction === 'increment' ? currentVal + step : currentVal - step
+  const commitValue = (raw: string, fallback = currentVal) => {
+    const trimmed = raw.trim()
 
-    if (min !== undefined && nextVal < min) {
-      nextVal = min
-    }
-    if (max !== undefined && nextVal > max) {
-      nextVal = max
+    if (trimmed === '' || trimmed === '-' || trimmed === '.') {
+      return fallback
     }
 
-    const decimalPlaces = (step.toString().split('.')[1] || '').length
-    nextVal = Number.parseFloat(nextVal.toFixed(decimalPlaces))
+    const parsed = Number.parseFloat(trimmed)
+    if (Number.isNaN(parsed)) {
+      return fallback
+    }
 
+    return formatNumber(clampNumber(parsed, min, max), step)
+  }
+
+  const emitValue = (nextVal: number) => {
     if (value === undefined) {
       setInternalVal(nextVal)
     }
@@ -63,6 +83,54 @@ export function NumberField({
       target: { name, value: nextVal },
       persist: () => {},
     })
+  }
+
+  const handleUpdate = (direction: 'increment' | 'decrement') => {
+    const baseVal = isEditing ? commitValue(draft, currentVal) : currentVal
+    let nextVal = direction === 'increment' ? baseVal + step : baseVal - step
+    nextVal = formatNumber(clampNumber(nextVal, min, max), step)
+
+    if (isEditing) {
+      setDraft(String(nextVal))
+    }
+
+    emitValue(nextVal)
+  }
+
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const raw = e.target.value
+    if (raw === '' || PARTIAL_NUMBER_PATTERN.test(raw)) {
+      setDraft(raw)
+    }
+  }
+
+  const handleInputFocus = () => {
+    setIsEditing(true)
+    setDraft(String(currentVal))
+  }
+
+  const handleInputBlur = () => {
+    const nextVal = commitValue(draft, currentVal)
+    setIsEditing(false)
+    setDraft('')
+    emitValue(nextVal)
+  }
+
+  const handleInputKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      const nextVal = commitValue(draft, currentVal)
+      setIsEditing(false)
+      setDraft('')
+      emitValue(nextVal)
+      e.currentTarget.blur()
+    }
+
+    if (e.key === 'Escape') {
+      setIsEditing(false)
+      setDraft('')
+      e.currentTarget.blur()
+    }
   }
 
   const startContinuousChange = (direction: 'increment' | 'decrement') => {
@@ -87,10 +155,18 @@ export function NumberField({
     }
   }, [])
 
+  useEffect(() => {
+    if (!isEditing) {
+      setDraft('')
+    }
+  }, [currentVal, isEditing])
+
   const stepperButtonClass = cn(
     'flex h-10 items-center justify-center bg-muted px-3 text-muted-foreground transition-colors select-none hover:bg-accent hover:text-primary',
     'disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-muted disabled:hover:text-muted-foreground',
   )
+
+  const displayValue = isEditing ? draft : String(currentVal)
 
   return (
     <FieldWrapper
@@ -118,12 +194,16 @@ export function NumberField({
         <input
           id={id}
           type="text"
+          inputMode="decimal"
           name={name}
-          value={currentVal}
-          readOnly
+          value={displayValue}
           disabled={disabled}
           aria-invalid={error ? 'true' : 'false'}
           aria-describedby={error ? `${id}-error` : hint ? `${id}-hint` : undefined}
+          onChange={handleInputChange}
+          onFocus={handleInputFocus}
+          onBlur={handleInputBlur}
+          onKeyDown={handleInputKeyDown}
           className={cn(
             fieldInputBase,
             'h-10 rounded-none border-x-0 text-center font-mono',

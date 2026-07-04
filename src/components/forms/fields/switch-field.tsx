@@ -39,22 +39,20 @@ export function SwitchField({
   }
 
   return (
-    <FieldWrapper id={id} hint={hint} error={error} inline={inline} disabled={disabled}>
+    <FieldWrapper
+      id={id}
+      label={label}
+      hint={hint}
+      error={error}
+      inline={inline}
+      disabled={disabled}
+    >
       <div
         className={cn(
-          'flex w-full items-center justify-between',
-          !inline && 'rounded-lg border border-border bg-muted/50 p-3',
+          'flex w-full items-center',
+          inline ? 'justify-end' : 'h-10',
         )}
       >
-        {label ? (
-          <label
-            htmlFor={id}
-            className="cursor-pointer select-none text-sm font-medium tracking-wide text-foreground"
-          >
-            {label}
-          </label>
-        ) : null}
-
         <Switch
           id={id}
           name={name}
