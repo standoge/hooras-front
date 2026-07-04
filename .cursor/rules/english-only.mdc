@@ -1,0 +1,21 @@
+---
+description: Enforce English-only convention for all project code, UI copy, and file names.
+globs:
+  - src/**
+  - skills/**
+  - index.html
+alwaysApply: true
+---
+
+# English Only
+
+All project artifacts must be written exclusively in English:
+
+- Folder and file names (kebab-case or PascalCase)
+- Variable, function, type, and prop names
+- Comments and documentation
+- UI copy, labels, placeholders, error messages, and aria-labels
+- URL routes
+- Skill files in `skills/`
+
+Do not introduce Spanish or other non-English text in the codebase.

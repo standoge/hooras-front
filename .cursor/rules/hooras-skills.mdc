@@ -1,0 +1,20 @@
+---
+description: Read project skills from the skills/ directory when working on UI or frontend tasks.
+globs:
+  - src/**
+  - skills/**
+alwaysApply: false
+---
+
+# Hooras Project Skills
+
+When working on UI, design system, or frontend implementation tasks, read the relevant skill files from `skills/**/SKILL.md` before making changes.
+
+Available skills are listed in `skills/README.md`.
+
+## UI Theming Rules
+
+- Prefer semantic Tailwind classes (`bg-card`, `text-foreground`, `border-border`, `bg-muted`, `bg-overlay`) in components
+- Brand aliases (`bg-cloud`, `text-ink-navy`, etc.) are valid but semantic classes are preferred for new code
+- Never use `bg-black/*` overlays or hardcoded hex in component `className` strings
+- Verify new UI in both light and dark mode before completing the task
