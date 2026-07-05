@@ -1521,6 +1521,23 @@ export interface paths {
         patch: operations["patchApiV1Document-requirementsId"];
         trace?: never;
     };
+    "/api/v1/files/.+/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Auto-generated from Express route (GET /api/v1/files/.+/) */
+        get: operations["getApiV1Files.+"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -4446,6 +4463,24 @@ export interface operations {
         };
     };
     "patchApiV1Document-requirementsId": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Success */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    "getApiV1Files.+": {
         parameters: {
             query?: never;
             header?: never;

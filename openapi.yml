@@ -29,10 +29,10 @@ info:
 
     |--------|------|---------|
 
-    | GET | /api/v1/me/?, /api/v1/me/applications, /api/v1/me/assignments,
-    /api/v1/me/document-requirements, /api/v1/me/document-uploads,
-    /api/v1/me/hour-logs, /api/v1/me/notifications, /api/v1/me/profile,
-    /api/v1/me/social-services/history, /api/v1/projects/?,
+    | GET | /api/v1/files/.+, /api/v1/me/?, /api/v1/me/applications,
+    /api/v1/me/assignments, /api/v1/me/document-requirements,
+    /api/v1/me/document-uploads, /api/v1/me/hour-logs, /api/v1/me/notifications,
+    /api/v1/me/profile, /api/v1/me/social-services/history, /api/v1/projects/?,
     /api/v1/projects/{id} | yes (published only) |
 
     | POST | /api/v1/auth/introspect, /api/v1/auth/login,
@@ -1835,6 +1835,15 @@ paths:
       summary: Auto-generated from Express route (PATCH
         /api/v1/document-requirements/{id})
       operationId: patchApiV1Document-requirementsId
+      responses:
+        "200":
+          description: Success
+  /api/v1/files/.+/:
+    get:
+      tags:
+        - Health
+      summary: Auto-generated from Express route (GET /api/v1/files/.+/)
+      operationId: getApiV1Files.+
       responses:
         "200":
           description: Success
