@@ -31,6 +31,8 @@ const SOURCE_OPTIONS: { label: string; value: ProjectSourceType | '' }[] = [
   { label: 'Scraped', value: 'scraped' },
 ]
 
+import { Building, MapPin, Plus } from 'lucide-react'
+
 export function ProjectsPage() {
   const { user } = useAuth()
   const student = isStudent(user?.roles)
@@ -55,20 +57,22 @@ export function ProjectsPage() {
   }, [projectsQuery.data, student])
 
   return (
-    <div className="mx-auto max-w-[var(--page-max-width)] px-4 py-10 sm:px-10">
+    <div className="mx-auto max-w-[var(--page-max-width)] px-4 py-10 sm:px-10 page-entrance">
       <PageHeader
         title="Projects"
         description="Browse and manage social hours projects."
         actions={
           canManage ? (
-            <Button asChild>
-              <Link to="/projects/new">New project</Link>
+            <Button asChild className="gradient-btn">
+              <Link to="/projects/new">
+                <Plus className="mr-2 h-4 w-4" /> New project
+              </Link>
             </Button>
           ) : undefined
         }
       />
 
-      <div className="mb-6 grid gap-4 sm:grid-cols-3">
+      <div className="mb-8 grid gap-4 sm:grid-cols-3 bg-card/40 backdrop-blur border border-border p-4 rounded-3xl shadow-[var(--shadow-sm)]">
         {!student ? (
           <SelectField
             label="Status"
@@ -104,34 +108,53 @@ export function ProjectsPage() {
         emptyTitle="No projects found"
         emptyDescription="Try adjusting your filters or check back later."
       >
-        <div className="grid gap-4">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {visibleProjects.map((project) => (
             <article
               key={project.id}
-              className="rounded-3xl border border-border bg-card p-6 shadow-[var(--shadow-sm)]"
+              className="group flex flex-col justify-between rounded-3xl border border-border bg-card p-6 shadow-[var(--shadow-sm)] hover:-translate-y-1.5 hover:shadow-[var(--shadow-sm-2)] transition-all duration-300 relative overflow-hidden"
             >
-              <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-                <div>
-                  <div className="flex flex-wrap items-center gap-2">
-                    <h2 className="text-lg font-semibold text-foreground">{project.title}</h2>
-                    <StatusBadge status={project.status} kind="project" />
-                  </div>
-                  <p className="mt-1 text-sm text-muted-foreground">{project.organizationName}</p>
-                  {project.location ? (
-                    <p className="mt-1 text-sm text-muted-foreground">{project.location}</p>
-                  ) : null}
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {project.categories.map((cat) => (
-                      <span
-                        key={cat}
-                        className="rounded-full bg-muted px-2.5 py-0.5 text-xs text-foreground"
-                      >
-                        {cat}
-                      </span>
-                    ))}
-                  </div>
+              <div className="absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r from-primary to-coral-magenta opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              
+              <div>
+                <div className="flex items-start justify-between gap-2 mb-3">
+                  <span className="text-[10px] font-semibold text-primary bg-primary/10 px-2.5 py-0.5 rounded-full capitalize">
+                    {project.sourceType.replace(/_/g, ' ')}
+                  </span>
+                  <StatusBadge status={project.status} kind="project" />
                 </div>
-                <Button asChild variant="secondary" size="sm">
+                
+                <h2 className="text-lg font-bold leading-snug text-foreground group-hover:text-primary transition-colors duration-200 line-clamp-2">
+                  {project.title}
+                </h2>
+                
+                <div className="mt-4 space-y-2">
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Building className="h-4 w-4 shrink-0 opacity-70" />
+                    <span className="truncate">{project.organizationName}</span>
+                  </div>
+                  {project.location ? (
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <MapPin className="h-4 w-4 shrink-0 opacity-70" />
+                      <span className="truncate">{project.location}</span>
+                    </div>
+                  ) : null}
+                </div>
+
+                <div className="mt-4 flex flex-wrap gap-1.5">
+                  {project.categories.map((cat) => (
+                    <span
+                      key={cat}
+                      className="rounded-full bg-muted/60 border border-border px-2.5 py-0.5 text-[10px] font-medium text-muted-foreground uppercase tracking-wider"
+                    >
+                      {cat}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              <div className="mt-6 pt-4 border-t border-border/50 flex justify-end">
+                <Button asChild variant="secondary" size="sm" className="w-full hover:bg-muted active:scale-95 transition-all duration-200">
                   <Link to="/projects/$projectId" params={{ projectId: project.id }}>
                     View details
                   </Link>

@@ -26,6 +26,7 @@ import { PageHeader } from '@/components/layout/PageHeader'
 import { StatusBadge } from '@/components/layout/StatusBadge'
 import { Button } from '@/components/ui/button'
 import { toastMutationError, toastMutationSuccess } from '@/lib/mutations'
+import { Calendar, Clock, Check, X } from 'lucide-react'
 
 const STATUS_OPTIONS: { label: string; value: ApprovalStatus | '' }[] = [
   { label: 'All statuses', value: '' },
@@ -129,22 +130,22 @@ export function HourLogsPage() {
   }
 
   return (
-    <div className="mx-auto max-w-[var(--page-max-width)] px-4 py-10 sm:px-10">
+    <div className="mx-auto max-w-[var(--page-max-width)] px-4 py-10 sm:px-10 page-entrance">
       <PageHeader
         title="Hour Logs"
         description="Submit and review social hours activity."
         actions={
           student ? (
-            <Button onClick={() => setShowForm((v) => !v)}>
-              {showForm ? 'Hide form' : 'Submit hours'}
+            <Button onClick={() => setShowForm((v) => !v)} className="gradient-btn rounded-xl">
+              {showForm ? 'Hide Form' : 'Submit Hours'}
             </Button>
           ) : undefined
         }
       />
 
-      <div className="mb-6 max-w-xs">
+      <div className="mb-8 max-w-xs bg-card border border-border p-4 rounded-2xl shadow-[var(--shadow-sm)]">
         <SelectField
-          label="Status"
+          label="Filter by Status"
           name="status"
           value={status}
           options={STATUS_OPTIONS}
@@ -155,9 +156,18 @@ export function HourLogsPage() {
       {showForm && student ? (
         <form
           onSubmit={handleSubmit}
-          className="mb-8 rounded-3xl border border-border bg-card p-6 shadow-[var(--shadow-sm)]"
+          className="mb-8 rounded-3xl border border-border bg-card p-6 shadow-[var(--shadow-sm)] animate-fade-in-up"
         >
-          <h2 className="mb-4 text-lg font-semibold text-foreground">Submit hour log</h2>
+          <div className="border-b border-border pb-4 mb-6">
+            <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
+              <Clock className="h-5 w-5 text-primary" />
+              Submit Hour Log
+            </h2>
+            <p className="text-xs text-muted-foreground mt-1">
+              Provide the date, category, duration, and supporting evidence for your activity.
+            </p>
+          </div>
+          
           <div className="grid gap-4 sm:grid-cols-2">
             <SelectField
               label="Assignment"
@@ -222,8 +232,8 @@ export function HourLogsPage() {
               onChange={(e) => setEvidence(e.target.value)}
             />
           </div>
-          <Button type="submit" className="mt-4" disabled={createMutation.isPending}>
-            {createMutation.isPending ? 'Submitting…' : 'Submit'}
+          <Button type="submit" className="mt-6 gradient-btn font-semibold rounded-xl h-10 px-6" disabled={createMutation.isPending}>
+            {createMutation.isPending ? 'Submitting…' : 'Submit Hour Log'}
           </Button>
         </form>
       ) : null}
@@ -236,35 +246,86 @@ export function HourLogsPage() {
         onRetry={() => void hourLogsQuery.refetch()}
         emptyTitle="No hour logs found"
       >
-        <div className="space-y-4">
-          {hourLogsQuery.data?.map((log) => (
-            <article
-              key={log.id}
-              className="rounded-3xl border border-border bg-card p-6 shadow-[var(--shadow-sm)]"
-            >
-              <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-                <div>
-                  <div className="flex flex-wrap items-center gap-2">
-                    <h2 className="font-semibold text-foreground">{log.date}</h2>
-                    <StatusBadge status={log.status} kind="approval" />
+        <div className="relative border-l border-border pl-6 ml-3 space-y-6">
+          {hourLogsQuery.data?.map((log) => {
+            const isApproved = log.status === 'approved'
+            const isPending = log.status === 'pending'
+            const isRejected = log.status === 'rejected'
+
+            let dotColor = 'bg-muted-foreground'
+            let ringColor = 'ring-muted/20'
+            if (isApproved) {
+              dotColor = 'bg-emerald-500'
+              ringColor = 'ring-emerald-500/20'
+            } else if (isPending) {
+              dotColor = 'bg-amber-500'
+              ringColor = 'ring-amber-500/20'
+            } else if (isRejected) {
+              dotColor = 'bg-destructive'
+              ringColor = 'ring-destructive/20'
+            }
+
+            return (
+              <article
+                key={log.id}
+                className="relative group rounded-3xl border border-border bg-card p-6 shadow-[var(--shadow-sm)] hover:shadow-[var(--shadow-sm-2)] hover:-translate-y-0.5 transition-all duration-300 page-entrance"
+              >
+                {/* Timeline node */}
+                <div className={`absolute -left-[31px] top-7 h-4.5 w-4.5 rounded-full border-4 border-background ${dotColor} ring-4 ${ringColor} transition-transform duration-300 group-hover:scale-110`} />
+
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                  <div className="space-y-2">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <div className="flex items-center gap-1 text-sm font-bold text-foreground">
+                        <Calendar className="h-4 w-4 text-muted-foreground shrink-0" />
+                        {log.date}
+                      </div>
+                      <StatusBadge status={log.status} kind="approval" />
+                    </div>
+                    
+                    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
+                      <span className="flex items-center gap-1 font-medium text-foreground">
+                        <Clock className="h-4 w-4 text-primary shrink-0" />
+                        {log.durationHours} hours
+                      </span>
+                      <span className="inline-flex items-center rounded-full bg-muted/60 border border-border px-2.5 py-0.5 text-xs text-foreground capitalize">
+                        {log.category}
+                      </span>
+                    </div>
+
+                    {/* Show description if exists */}
+                    {log.description ? (
+                      <p className="text-sm text-muted-foreground mt-3 bg-muted/20 border-l-2 border-border pl-3 py-1 rounded-r-lg italic line-clamp-3">
+                        {log.description}
+                      </p>
+                    ) : null}
                   </div>
-                  <p className="mt-1 text-sm text-muted-foreground">
-                    {log.durationHours}h — {log.category}
-                  </p>
+
+                  {canReview && log.status === 'pending' ? (
+                    <div className="flex gap-2 shrink-0 mt-2 sm:mt-0">
+                      <Button
+                        size="sm"
+                        className="gradient-btn h-9 rounded-lg"
+                        onClick={() => void handleApprove(log.id)}
+                        disabled={approveMutation.isPending}
+                      >
+                        <Check className="mr-1 h-4 w-4" /> Approve
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="secondary"
+                        className="h-9 rounded-lg hover:text-destructive hover:bg-destructive/5"
+                        onClick={() => setRejectId(log.id)}
+                        disabled={rejectMutation.isPending}
+                      >
+                        <X className="mr-1 h-4 w-4" /> Reject
+                      </Button>
+                    </div>
+                  ) : null}
                 </div>
-                {canReview && log.status === 'pending' ? (
-                  <div className="flex gap-2">
-                    <Button size="sm" onClick={() => void handleApprove(log.id)}>
-                      Approve
-                    </Button>
-                    <Button size="sm" variant="secondary" onClick={() => setRejectId(log.id)}>
-                      Reject
-                    </Button>
-                  </div>
-                ) : null}
-              </div>
-            </article>
-          ))}
+              </article>
+            )
+          })}
         </div>
       </QueryState>
 
