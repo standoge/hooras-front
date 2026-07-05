@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SetupRouteImport } from './routes/setup'
 import { Route as RulesRouteImport } from './routes/rules'
 import { Route as ReportsRouteImport } from './routes/reports'
 import { Route as ProfileRouteImport } from './routes/profile'
@@ -26,6 +27,11 @@ import { Route as ProjectsJobSearchRouteImport } from './routes/projects/job-sea
 import { Route as ProjectsProjectIdIndexRouteImport } from './routes/projects/$projectId/index'
 import { Route as ProjectsProjectIdEditRouteImport } from './routes/projects/$projectId/edit'
 
+const SetupRoute = SetupRouteImport.update({
+  id: '/setup',
+  path: '/setup',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RulesRoute = RulesRouteImport.update({
   id: '/rules',
   path: '/rules',
@@ -119,6 +125,7 @@ export interface FileRoutesByFullPath {
   '/profile': typeof ProfileRoute
   '/reports': typeof ReportsRoute
   '/rules': typeof RulesRoute
+  '/setup': typeof SetupRoute
   '/projects/job-search': typeof ProjectsJobSearchRoute
   '/projects/new': typeof ProjectsNewRoute
   '/projects/': typeof ProjectsIndexRoute
@@ -137,6 +144,7 @@ export interface FileRoutesByTo {
   '/profile': typeof ProfileRoute
   '/reports': typeof ReportsRoute
   '/rules': typeof RulesRoute
+  '/setup': typeof SetupRoute
   '/projects/job-search': typeof ProjectsJobSearchRoute
   '/projects/new': typeof ProjectsNewRoute
   '/projects': typeof ProjectsIndexRoute
@@ -156,6 +164,7 @@ export interface FileRoutesById {
   '/profile': typeof ProfileRoute
   '/reports': typeof ReportsRoute
   '/rules': typeof RulesRoute
+  '/setup': typeof SetupRoute
   '/projects/job-search': typeof ProjectsJobSearchRoute
   '/projects/new': typeof ProjectsNewRoute
   '/projects/': typeof ProjectsIndexRoute
@@ -176,6 +185,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/reports'
     | '/rules'
+    | '/setup'
     | '/projects/job-search'
     | '/projects/new'
     | '/projects/'
@@ -194,6 +204,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/reports'
     | '/rules'
+    | '/setup'
     | '/projects/job-search'
     | '/projects/new'
     | '/projects'
@@ -212,6 +223,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/reports'
     | '/rules'
+    | '/setup'
     | '/projects/job-search'
     | '/projects/new'
     | '/projects/'
@@ -231,6 +243,7 @@ export interface RootRouteChildren {
   ProfileRoute: typeof ProfileRoute
   ReportsRoute: typeof ReportsRoute
   RulesRoute: typeof RulesRoute
+  SetupRoute: typeof SetupRoute
   ProjectsJobSearchRoute: typeof ProjectsJobSearchRoute
   ProjectsNewRoute: typeof ProjectsNewRoute
   ProjectsIndexRoute: typeof ProjectsIndexRoute
@@ -240,6 +253,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/setup': {
+      id: '/setup'
+      path: '/setup'
+      fullPath: '/setup'
+      preLoaderRoute: typeof SetupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/rules': {
       id: '/rules'
       path: '/rules'
@@ -367,6 +387,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProfileRoute: ProfileRoute,
   ReportsRoute: ReportsRoute,
   RulesRoute: RulesRoute,
+  SetupRoute: SetupRoute,
   ProjectsJobSearchRoute: ProjectsJobSearchRoute,
   ProjectsNewRoute: ProjectsNewRoute,
   ProjectsIndexRoute: ProjectsIndexRoute,

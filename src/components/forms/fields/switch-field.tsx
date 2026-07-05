@@ -9,10 +9,15 @@ export interface SwitchFieldProps {
   error?: string
   checked?: boolean
   defaultChecked?: boolean
+  value?: boolean
+  defaultValue?: boolean
   inline?: boolean
   disabled?: boolean
   name?: string
-  onChange?: (e: { target: { name: string; value: boolean }; persist: () => void }) => void
+  onChange?: (e: {
+    target: { name: string; value: boolean; checked: boolean; type: 'checkbox' }
+    persist: () => void
+  }) => void
 }
 
 export function SwitchField({
@@ -21,6 +26,8 @@ export function SwitchField({
   error,
   checked,
   defaultChecked,
+  value,
+  defaultValue,
   inline = false,
   disabled = false,
   name = '',
@@ -29,11 +36,13 @@ export function SwitchField({
   const generatedId = useId()
   const id = `${name || 'switch'}-${generatedId}`
 
-  const isControlled = checked !== undefined
+  const isControlled = checked !== undefined || value !== undefined
+  const isChecked = checked !== undefined ? checked : value
+  const initialChecked = defaultChecked !== undefined ? defaultChecked : defaultValue
 
   const handleCheckedChange = (nextVal: boolean) => {
     onChange?.({
-      target: { name, value: nextVal },
+      target: { name, value: nextVal, checked: nextVal, type: 'checkbox' },
       persist: () => {},
     })
   }
@@ -56,8 +65,8 @@ export function SwitchField({
         <Switch
           id={id}
           name={name}
-          checked={isControlled ? checked : undefined}
-          defaultChecked={!isControlled ? defaultChecked : undefined}
+          checked={isControlled ? isChecked : undefined}
+          defaultChecked={!isControlled ? initialChecked : undefined}
           disabled={disabled}
           onCheckedChange={handleCheckedChange}
           aria-invalid={error ? 'true' : 'false'}

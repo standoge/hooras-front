@@ -114,6 +114,38 @@
   --animate-out: exit 150ms ease-in;
   --animate-accordion-down: accordion-down 200ms ease-out;
   --animate-accordion-up: accordion-up 200ms ease-out;
+  --animate-fade-in-up: fade-in-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-pulse-slow: pulse-subtle 4s ease-in-out infinite;
+  --animate-spin-slow: spin-slow 20s linear infinite;
+
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes pulse-subtle {
+    0%, 100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.92;
+      transform: scale(1.015);
+    }
+  }
+  @keyframes spin-slow {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
 }
 
 @theme inline {
@@ -362,6 +394,70 @@
 
 * {
   border-color: var(--border);
+}
+
+/* UI/UX Custom Classes */
+.glass-panel {
+  background: color-mix(in srgb, var(--card) 85%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid color-mix(in srgb, var(--border) 40%, transparent);
+}
+
+.glass-panel-hover {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-panel-hover:hover {
+  transform: translateY(-4px);
+  background: color-mix(in srgb, var(--card) 95%, transparent);
+  box-shadow: var(--shadow-sm-2);
+  border-color: color-mix(in srgb, var(--primary) 30%, transparent);
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--color-coral-magenta) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gradient-btn {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--color-deep-cobalt) 100%);
+  color: white;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.gradient-btn:hover {
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--primary) 30%, transparent);
+  transform: translateY(-1px);
+}
+
+.gradient-btn:active {
+  transform: translateY(1px);
+}
+
+.page-entrance {
+  animation: fade-in-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.input-glow:focus-within {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 20%, transparent);
+  border-color: var(--primary);
+}
+
+/* Fluid Admin Layout Content */
+[data-slot="admin-content"] > div {
+  max-width: 100% !important;
+  width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  padding: 1.5rem !important;
+}
+
+@media (min-width: 640px) {
+  [data-slot="admin-content"] > div {
+    padding: 2.5rem !important;
+  }
 }
 
 body {

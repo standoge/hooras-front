@@ -12,10 +12,12 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { filterNavGroups } from '@/components/layout/nav-config'
 import { useAuth } from '@/auth/AuthProvider'
+import { useEnabledModuleKeys } from '@/api/hooks/useCapabilities'
 
 export function MobileNav() {
   const { user } = useAuth()
-  const groups = filterNavGroups(user?.roles)
+  const enabledModules = useEnabledModuleKeys()
+  const groups = filterNavGroups(user?.roles, enabledModules)
 
   return (
     <DropdownMenu>

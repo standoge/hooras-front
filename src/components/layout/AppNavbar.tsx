@@ -10,11 +10,13 @@ import {
 } from '@/components/ui/navigation-menu'
 import { filterNavGroups } from '@/components/layout/nav-config'
 import { useAuth } from '@/auth/AuthProvider'
+import { useEnabledModuleKeys } from '@/api/hooks/useCapabilities'
 import { cn } from '@/lib/utils'
 
 export function AppNavbar() {
   const { user } = useAuth()
-  const groups = filterNavGroups(user?.roles)
+  const enabledModules = useEnabledModuleKeys()
+  const groups = filterNavGroups(user?.roles, enabledModules)
 
   return (
     <NavigationMenu className="hidden lg:flex">

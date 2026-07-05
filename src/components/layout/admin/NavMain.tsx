@@ -13,6 +13,7 @@ import {
   SidebarMenuItem,
 } from '@/components/ui/sidebar'
 import { useAuth } from '@/auth/AuthProvider'
+import { useEnabledModuleKeys } from '@/api/hooks/useCapabilities'
 
 function NavGroupSection({
   group,
@@ -44,7 +45,8 @@ function NavGroupSection({
 
 export function NavMain() {
   const { user } = useAuth()
-  const groups = filterNavGroups(user?.roles)
+  const enabledModules = useEnabledModuleKeys()
+  const groups = filterNavGroups(user?.roles, enabledModules)
   const pathname = useRouterState({ select: (s) => s.location.pathname })
 
   const isActive = (to: string) => {

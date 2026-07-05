@@ -29,6 +29,8 @@ There is no `gen:api` npm script — regeneration is intentional and manual.
 pnpm dev
 ```
 
+On first visit to a fresh backend instance, the app redirects to `/setup` for the configuration wizard (connectors, modules, admin account).
+
 ## Build & lint
 
 ```bash
