@@ -27,6 +27,27 @@ const approvalStatusStyles: Record<string, string> = {
   rejected: 'bg-destructive/15 text-destructive',
 }
 
+function getDotColor(status: string): string {
+  switch (status) {
+    case 'approved':
+    case 'in_execution':
+      return 'bg-emerald-500 dark:bg-emerald-400'
+    case 'pending':
+    case 'pending_review':
+    case 'waitlisted':
+    case 'suspended':
+      return 'bg-amber-500 dark:bg-amber-400 animate-pulse'
+    case 'published':
+    case 'accepting_applications':
+    case 'submitted':
+      return 'bg-primary'
+    case 'rejected':
+      return 'bg-destructive'
+    default:
+      return 'bg-muted-foreground'
+  }
+}
+
 function formatLabel(value: string) {
   return value.replace(/_/g, ' ')
 }
@@ -47,14 +68,17 @@ export function StatusBadge({ status, kind = 'generic', className }: StatusBadge
           ? approvalStatusStyles
           : {}
 
+  const dotColor = getDotColor(status)
+
   return (
     <span
       className={cn(
-        'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium capitalize',
+        'inline-flex items-center gap-1.5 rounded-full border border-current/10 px-2.5 py-0.5 text-xs font-semibold capitalize tracking-wide transition-all duration-200',
         styleMap[status] ?? 'bg-muted text-muted-foreground',
         className,
       )}
     >
+      <span className={cn('h-1.5 w-1.5 rounded-full shrink-0', dotColor)} />
       {formatLabel(status)}
     </span>
   )

@@ -10,9 +10,9 @@ export const fieldControlMinHeight = 'min-h-10'
 export const fieldStackGap = 'gap-[var(--element-gap)]'
 
 const fieldInputShared = cn(
-  'w-full rounded-lg border border-border bg-muted px-3 py-2 text-[length:var(--text-body-sm)] text-foreground transition-all outline-none',
+  'w-full rounded-lg border border-border bg-muted/40 px-3 py-2 text-[length:var(--text-body-sm)] text-foreground transition-all outline-none duration-200',
   'placeholder:text-muted-foreground',
-  'focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+  'focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/15 focus-visible:bg-card focus-visible:shadow-[0_0_8px_rgba(0,107,255,0.12)]',
   'disabled:cursor-not-allowed disabled:opacity-50',
 )
 
@@ -26,9 +26,9 @@ export const fieldInputError =
   'border-destructive focus-visible:border-destructive focus-visible:ring-destructive'
 
 export const fieldTriggerBase = cn(
-  'flex w-full cursor-pointer items-center justify-between rounded-lg border border-border bg-muted px-3 py-2 text-left text-[length:var(--text-body-sm)] text-foreground transition-all outline-none',
+  'flex w-full cursor-pointer items-center justify-between rounded-lg border border-border bg-muted/40 px-3 py-2 text-left text-[length:var(--text-body-sm)] text-foreground transition-all outline-none duration-200',
   fieldControlHeight,
-  'focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+  'focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/15 focus-visible:bg-card focus-visible:shadow-[0_0_8px_rgba(0,107,255,0.12)]',
   'disabled:cursor-not-allowed disabled:opacity-50',
 )
 
