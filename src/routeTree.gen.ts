@@ -16,6 +16,7 @@ import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as HourLogsRouteImport } from './routes/hour-logs'
 import { Route as DocumentsRouteImport } from './routes/documents'
+import { Route as CompaniesRouteImport } from './routes/companies'
 import { Route as CertificatesRouteImport } from './routes/certificates'
 import { Route as AssignmentsRouteImport } from './routes/assignments'
 import { Route as ApplicationsRouteImport } from './routes/applications'
@@ -60,6 +61,11 @@ const HourLogsRoute = HourLogsRouteImport.update({
 const DocumentsRoute = DocumentsRouteImport.update({
   id: '/documents',
   path: '/documents',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CompaniesRoute = CompaniesRouteImport.update({
+  id: '/companies',
+  path: '/companies',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CertificatesRoute = CertificatesRouteImport.update({
@@ -119,6 +125,7 @@ export interface FileRoutesByFullPath {
   '/applications': typeof ApplicationsRoute
   '/assignments': typeof AssignmentsRoute
   '/certificates': typeof CertificatesRoute
+  '/companies': typeof CompaniesRoute
   '/documents': typeof DocumentsRoute
   '/hour-logs': typeof HourLogsRoute
   '/login': typeof LoginRoute
@@ -138,6 +145,7 @@ export interface FileRoutesByTo {
   '/applications': typeof ApplicationsRoute
   '/assignments': typeof AssignmentsRoute
   '/certificates': typeof CertificatesRoute
+  '/companies': typeof CompaniesRoute
   '/documents': typeof DocumentsRoute
   '/hour-logs': typeof HourLogsRoute
   '/login': typeof LoginRoute
@@ -158,6 +166,7 @@ export interface FileRoutesById {
   '/applications': typeof ApplicationsRoute
   '/assignments': typeof AssignmentsRoute
   '/certificates': typeof CertificatesRoute
+  '/companies': typeof CompaniesRoute
   '/documents': typeof DocumentsRoute
   '/hour-logs': typeof HourLogsRoute
   '/login': typeof LoginRoute
@@ -179,6 +188,7 @@ export interface FileRouteTypes {
     | '/applications'
     | '/assignments'
     | '/certificates'
+    | '/companies'
     | '/documents'
     | '/hour-logs'
     | '/login'
@@ -198,6 +208,7 @@ export interface FileRouteTypes {
     | '/applications'
     | '/assignments'
     | '/certificates'
+    | '/companies'
     | '/documents'
     | '/hour-logs'
     | '/login'
@@ -217,6 +228,7 @@ export interface FileRouteTypes {
     | '/applications'
     | '/assignments'
     | '/certificates'
+    | '/companies'
     | '/documents'
     | '/hour-logs'
     | '/login'
@@ -237,6 +249,7 @@ export interface RootRouteChildren {
   ApplicationsRoute: typeof ApplicationsRoute
   AssignmentsRoute: typeof AssignmentsRoute
   CertificatesRoute: typeof CertificatesRoute
+  CompaniesRoute: typeof CompaniesRoute
   DocumentsRoute: typeof DocumentsRoute
   HourLogsRoute: typeof HourLogsRoute
   LoginRoute: typeof LoginRoute
@@ -300,6 +313,13 @@ declare module '@tanstack/react-router' {
       path: '/documents'
       fullPath: '/documents'
       preLoaderRoute: typeof DocumentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/companies': {
+      id: '/companies'
+      path: '/companies'
+      fullPath: '/companies'
+      preLoaderRoute: typeof CompaniesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/certificates': {
@@ -381,6 +401,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApplicationsRoute: ApplicationsRoute,
   AssignmentsRoute: AssignmentsRoute,
   CertificatesRoute: CertificatesRoute,
+  CompaniesRoute: CompaniesRoute,
   DocumentsRoute: DocumentsRoute,
   HourLogsRoute: HourLogsRoute,
   LoginRoute: LoginRoute,

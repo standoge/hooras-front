@@ -6,7 +6,7 @@ export const API_BASE_URL =
 const TOKEN_STORAGE_KEY = 'hooras-token'
 
 type HttpMethod = 'get' | 'post' | 'put' | 'patch' | 'delete'
-type SuccessStatus = 200 | 201 | 202 | 204
+type SuccessStatus = 200 | 201 | 202 | 204 | '200' | '201' | '202' | '204'
 
 type OperationPath<Method extends HttpMethod> = {
   [Path in keyof paths]: Method extends keyof paths[Path]

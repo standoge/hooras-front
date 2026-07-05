@@ -32,3 +32,8 @@ export type DocumentUploadInput = Schemas['DocumentUploadInput']
 export type Certificate = Schemas['Certificate']
 export type ProgressReport = Schemas['ProgressReport']
 export type ProjectReport = Schemas['ProjectReport']
+export type Company = Schemas['Company']
+export type CompanyInput = Schemas['CompanyInput']
+export type CompanyPatch = Schemas['CompanyPatch']
+
+

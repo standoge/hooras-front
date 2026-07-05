@@ -21,4 +21,6 @@ export const queryKeys = {
   rules: (filters?: QueryParams) => ['rules', filters] as const,
   progressReport: ['reports', 'progress'] as const,
   projectReport: ['reports', 'projects'] as const,
+  companies: ['companies'] as const,
+  company: (id: string) => ['companies', id] as const,
 }

@@ -9,3 +9,5 @@ export * from './use-rules'
 export * from './use-reports'
 export * from './use-certificates'
 export * from './use-job-search'
+export * from './use-companies'
+
