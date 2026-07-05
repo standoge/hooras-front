@@ -138,6 +138,8 @@ export function UploadField({
             remoteUrl =
               (response.url as string) ||
               (response.secure_url as string) ||
+              (response.storageRef as string) ||
+              (response.id as string) ||
               (data?.url as string) ||
               ''
           }
@@ -153,9 +155,24 @@ export function UploadField({
         })
         triggerChange(updatedList)
       } else {
+        let errorMessage = `Upload failed (${xhr.status})`
+        try {
+          const response = JSON.parse(xhr.responseText) as Record<string, unknown>
+          const nested = response.error as Record<string, unknown> | undefined
+          if (typeof nested?.message === 'string') {
+            errorMessage = nested.message
+          } else if (typeof response.message === 'string') {
+            errorMessage = response.message
+          }
+        } catch {
+          if (xhr.statusText) {
+            errorMessage = `Upload failed: ${xhr.statusText}`
+          }
+        }
+
         const updatedList = itemsList.map((it) => {
           if (it.id === item.id) {
-            return { ...it, status: 'error' as const, error: `Upload failed: ${xhr.statusText}` }
+            return { ...it, status: 'error' as const, error: errorMessage }
           }
           return it
         })

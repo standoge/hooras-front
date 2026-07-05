@@ -21,6 +21,15 @@ export function parseEvidenceUploadResponse(body: unknown): string {
   throw new Error('Unexpected evidence upload response')
 }
 
+export function parseDocumentUploadResponse(body: unknown): string {
+  if (body && typeof body === 'object') {
+    const record = body as Record<string, unknown>
+    if (typeof record.storageRef === 'string') return record.storageRef
+    if (typeof record.id === 'string') return record.id
+  }
+  throw new Error('Unexpected document upload response')
+}
+
 export async function fetchAuthenticatedFile(storageRef: string): Promise<Blob> {
   const headers = new Headers()
   const token = getStoredToken()

@@ -1,6 +1,6 @@
 import type { DocumentRequirement } from '@/api/types'
 import type { MyDocumentRequirement } from '@/api/hooks/use-documents'
-import { getDocumentUploadUrl } from '@/api/files'
+import { getDocumentUploadUrl, parseDocumentUploadResponse } from '@/api/files'
 import { UploadField } from '@/components/forms'
 import { StatusBadge } from '@/components/layout/StatusBadge'
 import { Switch } from '@/components/ui/switch'
@@ -122,6 +122,9 @@ export function DocumentRequirementCard({
                 maxFiles={1}
                 uploadUrl={getDocumentUploadUrl(requirement.id)}
                 uploadHeaders={uploadHeaders}
+                mapUploadResponse={(response) => ({
+                  remoteUrl: parseDocumentUploadResponse(response),
+                })}
                 onChange={() => onUploadComplete?.()}
               />
             </div>
