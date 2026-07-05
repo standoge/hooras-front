@@ -5,6 +5,7 @@ import type {
   ApprovalStatus,
   DocumentRequirement,
   DocumentRequirementInput,
+  DocumentRequirementPatch,
   DocumentUpload,
   DocumentUploadInput,
 } from '@/api/types'
@@ -30,9 +31,22 @@ export function useDocumentRequirements(options?: DocumentQueryOptions) {
     queryKey: studentScope ? queryKeys.myDocumentRequirements : queryKeys.documentRequirements,
     queryFn: async () => {
       if (studentScope) {
-        return (await api.get('/api/v1/me/document-requirements')) as unknown as MyDocumentRequirement[]
+        return (await api.get('/api/v1/me/document-requirements')) as unknown as Array<{
+          requirement: DocumentRequirement
+          upload: { status: ApprovalStatus } | null
+        }>
       }
       return api.get('/api/v1/document-requirements')
+    },
+    select: (data) => {
+      if (!studentScope) return data as DocumentRequirement[]
+      return (data as Array<{ requirement: DocumentRequirement; upload: { status: ApprovalStatus } | null }>).map(
+        (item) => ({
+          ...item.requirement,
+          uploadStatus: item.upload?.status ?? ('missing' as const),
+          latestUpload: item.upload ?? undefined,
+        }),
+      )
     },
   })
 }
@@ -69,6 +83,18 @@ export function useCreateDocumentRequirement() {
       api.post('/api/v1/document-requirements', { body }),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: queryKeys.documentRequirements })
+    },
+  })
+}
+
+export function useUpdateDocumentRequirement() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: ({ id, ...body }: { id: string } & DocumentRequirementPatch) =>
+      api.patch('/api/v1/document-requirements/{id}', { path: { id }, body }),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: queryKeys.documentRequirements })
+      void queryClient.invalidateQueries({ queryKey: queryKeys.myDocumentRequirements })
     },
   })
 }

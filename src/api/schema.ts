@@ -1026,6 +1026,30 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/document-requirements/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Delete or deactivate requirement
+         * @description Physically deletes when no uploads exist; otherwise sets active to false.
+         */
+        delete: operations["deleteDocumentRequirement"];
+        options?: never;
+        head?: never;
+        /**
+         * Update document requirement
+         * @description Requires admin or coordinator role. Use active false to deactivate without deleting upload history.
+         */
+        patch: operations["updateDocumentRequirement"];
+        trace?: never;
+    };
     "/api/v1/documents": {
         parameters: {
             query?: never;
@@ -1501,24 +1525,6 @@ export interface paths {
         options?: never;
         head?: never;
         patch?: never;
-        trace?: never;
-    };
-    "/api/v1/document-requirements/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        /** Auto-generated from Express route (DELETE /api/v1/document-requirements/{id}) */
-        delete: operations["deleteApiV1Document-requirementsId"];
-        options?: never;
-        head?: never;
-        /** Auto-generated from Express route (PATCH /api/v1/document-requirements/{id}) */
-        patch: operations["patchApiV1Document-requirementsId"];
         trace?: never;
     };
     "/api/v1/files/.+/": {
@@ -2033,7 +2039,12 @@ export interface components {
         DocumentRequirementInput: {
             key: string;
             label: string;
+            description?: string;
             required: boolean;
+            /** @enum {string} */
+            scope?: "global" | "project" | "program";
+            /** Format: uuid */
+            projectId?: string;
             appliesTo?: {
                 projectType?: string;
                 facultyCode?: string;
@@ -2044,9 +2055,36 @@ export interface components {
             requiresApproval?: boolean;
             templateId?: string;
         };
+        /** @description Partial document requirement update. All fields are optional. */
+        DocumentRequirementPatch: {
+            key?: string;
+            label?: string;
+            description?: string;
+            required?: boolean;
+            active?: boolean;
+            /** @enum {string} */
+            scope?: "global" | "project" | "program";
+            /** Format: uuid */
+            projectId?: string;
+            appliesTo?: {
+                projectType?: string;
+                facultyCode?: string;
+                programCode?: string;
+            };
+            allowedFileTypes?: string[];
+            maxFileSizeMb?: number;
+            requiresApproval?: boolean;
+            templateId?: string;
+        };
         DocumentRequirement: components["schemas"]["DocumentRequirementInput"] & {
             /** Format: uuid */
             id: string;
+            active?: boolean;
+            createdBy?: string;
+        };
+        DocumentRequirementDeleteResult: components["schemas"]["DocumentRequirement"] & {
+            /** @description True when the requirement was physically removed (no uploads). */
+            deleted?: boolean;
         };
         DocumentUploadInput: {
             /** Format: uuid */
@@ -3709,6 +3747,54 @@ export interface operations {
             };
         };
     };
+    deleteDocumentRequirement: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Document requirement deleted or deactivated */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DocumentRequirementDeleteResult"];
+                };
+            };
+        };
+    };
+    updateDocumentRequirement: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DocumentRequirementPatch"];
+            };
+        };
+        responses: {
+            /** @description Document requirement updated */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DocumentRequirement"];
+                };
+            };
+        };
+    };
     listDocuments: {
         parameters: {
             query?: {
@@ -4427,42 +4513,6 @@ export interface operations {
         };
     };
     putApiV1ConfigSmtp: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Success */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    "deleteApiV1Document-requirementsId": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Success */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    "patchApiV1Document-requirementsId": {
         parameters: {
             query?: never;
             header?: never;
