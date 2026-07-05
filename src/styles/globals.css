@@ -183,14 +183,14 @@
   --ring: #006bff;
   --radius: 8px;
 
-  /* Sidebar — muted canvas for inset admin layout */
-  --sidebar: var(--brand-pebble);
+  /* Sidebar — shadcn sidebar-07 palette (light) */
+  --sidebar: #fafafa;
   --sidebar-foreground: var(--brand-ink-navy);
   --sidebar-primary: #006bff;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: var(--brand-paper);
+  --sidebar-accent: #f4f4f5;
   --sidebar-accent-foreground: var(--brand-ink-navy);
-  --sidebar-border: var(--brand-hairline);
+  --sidebar-border: #e4e4e7;
   --sidebar-ring: #006bff;
 
   /* Shadows — light */
@@ -231,23 +231,21 @@
   --input: var(--brand-hairline);
   --ring: #006bff;
 
-  /* Sidebar — muted canvas for inset admin layout */
-  --sidebar: var(--brand-pebble);
-  --sidebar-foreground: var(--brand-ink-navy);
+  /* Sidebar — shadcn sidebar-07 palette (dark) */
+  --sidebar: #18181b;
+  --sidebar-foreground: #f4f4f5;
   --sidebar-primary: #006bff;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: var(--brand-paper);
-  --sidebar-accent-foreground: var(--brand-ink-navy);
-  --sidebar-border: var(--brand-hairline);
+  --sidebar-accent: #27272a;
+  --sidebar-accent-foreground: #f4f4f5;
+  --sidebar-border: #27272a;
   --sidebar-ring: #006bff;
-
-  /* Shadows — dark (higher alpha for visibility on navy) */
   --shadow-sm-value: rgba(0, 0, 0, 0.15) 0px 4px 5px 0px, rgba(0, 0, 0, 0.1) 0px 4px 10px 0px, rgba(0, 0, 0, 0.2) 0px 10px 20px 0px;
   --shadow-sm-2-value: rgba(0, 0, 0, 0.15) 0px 4px 5px 0px, rgba(0, 0, 0, 0.12) 0px 8px 15px 0px, rgba(0, 0, 0, 0.25) 0px 30px 50px 0px;
   --shadow-sm-3-value: rgba(0, 0, 0, 0.15) 0px 4px 5px 0px, rgba(0, 0, 0, 0.12) 0px 8px 15px 0px, rgba(0, 0, 0, 0.2) 0px 15px 30px 0px;
 }
 
-/* Admin panel: strip nested page container padding inside inset content */
+/* Admin panel: strip nested page container padding inside sidebar content */
 [data-slot='admin-content'] > div {
   margin-inline: 0;
   max-width: none;

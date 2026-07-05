@@ -10,9 +10,9 @@ interface AdminPanelShellProps {
 
 export function AdminPanelShell({ children }: AdminPanelShellProps) {
   return (
-    <SidebarProvider className="bg-sidebar flex min-h-svh w-full">
+    <SidebarProvider defaultOpen className="flex min-h-svh w-full">
       <AppSidebar />
-      <SidebarInset className="overflow-hidden">
+      <SidebarInset>
         <AdminLayoutProvider>
           <AdminHeader />
           <AdminContent>{children}</AdminContent>
