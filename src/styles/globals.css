@@ -70,6 +70,7 @@
   --card-padding: 24px;
   --element-gap: 12px;
   --sidebar-width: 14rem;
+  --sidebar-width-icon: 3rem;
   --width-dropdown: 14rem;
   --width-hover-card: 16rem;
   --width-popover: 18rem;
@@ -133,6 +134,14 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
   --radius-sm: var(--radius-small);
   --radius-md: var(--radius-inputs);
   --radius-lg: var(--radius-buttons);
@@ -172,6 +181,16 @@
   --ring: #006bff;
   --radius: 8px;
 
+  /* Sidebar */
+  --sidebar: var(--brand-paper);
+  --sidebar-foreground: var(--brand-ink-navy);
+  --sidebar-primary: #006bff;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: var(--brand-pebble);
+  --sidebar-accent-foreground: var(--brand-ink-navy);
+  --sidebar-border: var(--brand-hairline);
+  --sidebar-ring: #006bff;
+
   /* Shadows — light */
   --shadow-sm-value: rgba(71, 103, 136, 0.04) 0px 4px 5px 0px, rgba(71, 103, 136, 0.03) 0px 4px 10px 0px, rgba(71, 103, 136, 0.05) 0px 10px 20px 0px;
   --shadow-sm-2-value: rgba(71, 103, 136, 0.04) 0px 4px 5px 0px, rgba(71, 103, 136, 0.03) 0px 8px 15px 0px, rgba(71, 103, 136, 0.08) 0px 30px 50px 0px;
@@ -209,6 +228,16 @@
   --border: var(--brand-hairline);
   --input: var(--brand-hairline);
   --ring: #006bff;
+
+  /* Sidebar */
+  --sidebar: var(--brand-paper);
+  --sidebar-foreground: var(--brand-ink-navy);
+  --sidebar-primary: #006bff;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: var(--brand-pebble);
+  --sidebar-accent-foreground: var(--brand-ink-navy);
+  --sidebar-border: var(--brand-hairline);
+  --sidebar-ring: #006bff;
 
   /* Shadows — dark (higher alpha for visibility on navy) */
   --shadow-sm-value: rgba(0, 0, 0, 0.15) 0px 4px 5px 0px, rgba(0, 0, 0, 0.1) 0px 4px 10px 0px, rgba(0, 0, 0, 0.2) 0px 10px 20px 0px;
