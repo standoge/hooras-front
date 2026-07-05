@@ -5,11 +5,12 @@ import {
   useDocumentRequirements,
   useDocuments,
   useCreateDocumentRequirement,
+  useUpdateDocumentRequirement,
   useRegisterDocumentUpload,
   useApproveDocument,
   useRejectDocument,
 } from '@/api/hooks'
-import { fetchAuthenticatedFile, getDocumentUploadUrl } from '@/api/files'
+import { fetchAuthenticatedFile } from '@/api/files'
 import { getStoredToken } from '@/api/client'
 import { SelectField, TextField, SwitchField, UploadField, type UploadFieldItem } from '@/components/forms'
 import { QueryState, ConfirmDialog } from '@/components/feedback'
@@ -19,6 +20,7 @@ import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Editor } from '@/components/editor'
 import { toastMutationError, toastMutationSuccess } from '@/lib/mutations'
+import { DocumentRequirementCard } from '@/pages/documents/DocumentRequirementCard'
 
 async function openAuthenticatedFile(storageRef: string) {
   try {
@@ -39,6 +41,7 @@ export function DocumentsPage() {
   const requirementsQuery = useDocumentRequirements({ studentScope })
   const documentsQuery = useDocuments(undefined, { studentScope })
   const createRequirementMutation = useCreateDocumentRequirement()
+  const updateRequirementMutation = useUpdateDocumentRequirement()
   const registerUploadMutation = useRegisterDocumentUpload()
   const approveMutation = useApproveDocument()
   const rejectMutation = useRejectDocument()
@@ -54,6 +57,7 @@ export function DocumentsPage() {
 
   const [rejectId, setRejectId] = useState<string | null>(null)
   const [rejectReason, setRejectReason] = useState('')
+  const [togglingRequirementId, setTogglingRequirementId] = useState<string | null>(null)
 
   const uploadHeaders: Record<string, string> | undefined = (() => {
     const token = getStoredToken()
@@ -116,6 +120,25 @@ export function DocumentsPage() {
     }
   }
 
+  const handleToggleActive = async (id: string, active: boolean) => {
+    setTogglingRequirementId(id)
+    try {
+      await updateRequirementMutation.mutateAsync({ id, active })
+      toastMutationSuccess(active ? 'Requirement activated' : 'Requirement deactivated')
+    } catch (error) {
+      toastMutationError(error)
+    } finally {
+      setTogglingRequirementId(null)
+    }
+  }
+
+  const sortedRequirements = [...(requirementsQuery.data ?? [])].sort((a, b) => {
+    const aActive = a.active !== false ? 1 : 0
+    const bActive = b.active !== false ? 1 : 0
+    if (aActive !== bActive) return bActive - aActive
+    return a.label.localeCompare(b.label)
+  })
+
   const requirementOptions =
     requirementsQuery.data?.map((req) => ({ label: req.label, value: req.id })) ?? []
 
@@ -174,41 +197,23 @@ export function DocumentsPage() {
             onRetry={() => void requirementsQuery.refetch()}
             emptyTitle="No requirements defined"
           >
-            <ul className="space-y-3">
-              {requirementsQuery.data?.map((req) => (
-                <li
+            <div className="space-y-4">
+              {sortedRequirements.map((req) => (
+                <DocumentRequirementCard
                   key={req.id}
-                  className="rounded-3xl border border-border bg-card px-6 py-4 shadow-[var(--shadow-sm)]"
-                >
-                  <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-                    <div>
-                      <p className="font-medium text-foreground">{req.label}</p>
-                      <p className="text-sm text-muted-foreground">{req.key}</p>
-                      {'uploadStatus' in req && typeof req.uploadStatus === 'string' ? (
-                        <p className="mt-2 text-sm text-muted-foreground">
-                          Status: {req.uploadStatus}
-                        </p>
-                      ) : null}
-                    </div>
-                    {studentScope ? (
-                      <div className="min-w-[240px]">
-                        <UploadField
-                          label={`Upload for ${req.label}`}
-                          name={`upload-${req.id}`}
-                          maxFiles={1}
-                          uploadUrl={getDocumentUploadUrl(req.id)}
-                          uploadHeaders={uploadHeaders}
-                          onChange={() => {
-                            void requirementsQuery.refetch()
-                            void documentsQuery.refetch()
-                          }}
-                        />
-                      </div>
-                    ) : null}
-                  </div>
-                </li>
+                  requirement={req}
+                  canManage={canManage}
+                  studentScope={studentScope}
+                  uploadHeaders={uploadHeaders}
+                  onUploadComplete={() => {
+                    void requirementsQuery.refetch()
+                    void documentsQuery.refetch()
+                  }}
+                  onToggleActive={(id, active) => void handleToggleActive(id, active)}
+                  isToggling={togglingRequirementId === req.id}
+                />
               ))}
-            </ul>
+            </div>
           </QueryState>
         </TabsContent>
 

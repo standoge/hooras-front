@@ -25,6 +25,12 @@ const approvalStatusStyles: Record<string, string> = {
   pending: 'bg-amber-500/15 text-amber-700 dark:text-amber-300',
   approved: 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300',
   rejected: 'bg-destructive/15 text-destructive',
+  missing: 'bg-muted text-muted-foreground',
+}
+
+const lifecycleStatusStyles: Record<string, string> = {
+  active: 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300',
+  inactive: 'bg-muted text-muted-foreground',
 }
 
 function getDotColor(status: string): string {
@@ -43,6 +49,11 @@ function getDotColor(status: string): string {
       return 'bg-primary'
     case 'rejected':
       return 'bg-destructive'
+    case 'active':
+      return 'bg-emerald-500 dark:bg-emerald-400'
+    case 'inactive':
+    case 'missing':
+      return 'bg-muted-foreground'
     default:
       return 'bg-muted-foreground'
   }
@@ -54,7 +65,7 @@ function formatLabel(value: string) {
 
 interface StatusBadgeProps {
   status: string
-  kind?: 'project' | 'application' | 'approval' | 'generic'
+  kind?: 'project' | 'application' | 'approval' | 'lifecycle' | 'generic'
   className?: string
 }
 
@@ -66,7 +77,9 @@ export function StatusBadge({ status, kind = 'generic', className }: StatusBadge
         ? applicationStatusStyles
         : kind === 'approval'
           ? approvalStatusStyles
-          : {}
+          : kind === 'lifecycle'
+            ? lifecycleStatusStyles
+            : {}
 
   const dotColor = getDotColor(status)
 
