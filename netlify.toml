@@ -2,6 +2,16 @@
   command = "pnpm build"
   publish = "dist"
 
+[build.environment]
+  VITE_API_BASE_URL = "SAME_ORIGIN"
+
+# Proxy API requests to the backend so multipart uploads stay same-origin.
+[[redirects]]
+  from = "/api/*"
+  to = "https://hoorasback.netlify.app/api/:splat"
+  status = 200
+  force = true
+
 [[redirects]]
   from = "/*"
   to = "/index.html"

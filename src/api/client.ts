@@ -1,7 +1,17 @@
 import type { paths } from './schema'
 
-export const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL ?? 'https://social-hours.example.edu'
+function resolveApiBaseUrl(): string {
+  const configured = import.meta.env.VITE_API_BASE_URL?.trim()
+  if (configured && configured !== 'SAME_ORIGIN') {
+    return configured.replace(/\/+$/, '')
+  }
+  if (typeof window !== 'undefined') {
+    return window.location.origin
+  }
+  return import.meta.env.DEV ? 'http://localhost:3000' : ''
+}
+
+export const API_BASE_URL = resolveApiBaseUrl()
 
 const TOKEN_STORAGE_KEY = 'hooras-token'
 
