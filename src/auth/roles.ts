@@ -5,6 +5,13 @@ export const SUPERVISOR_ROLES: UserRole[] = ['faculty_supervisor', 'external_sup
 export const REPORT_ROLES: UserRole[] = ['coordinator', 'admin', 'auditor']
 export const MANAGEMENT_ROLES: UserRole[] = ['coordinator', 'admin']
 export const ADMIN_ROLES: UserRole[] = ['admin']
+export const STAFF_ROLES: UserRole[] = [
+  'coordinator',
+  'faculty_supervisor',
+  'external_supervisor',
+  'admin',
+  'auditor',
+]
 
 export function hasAnyRole(userRoles: UserRole[] | undefined, allowed: UserRole[]): boolean {
   if (!userRoles?.length) return false
@@ -33,4 +40,8 @@ export function canViewReports(userRoles: UserRole[] | undefined): boolean {
 
 export function isManagementUser(userRoles: UserRole[] | undefined): boolean {
   return hasAnyRole(userRoles, MANAGEMENT_ROLES)
+}
+
+export function usesStudentApi(userRoles: UserRole[] | undefined): boolean {
+  return isStudent(userRoles) && !hasAnyRole(userRoles, STAFF_ROLES)
 }

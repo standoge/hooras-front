@@ -25,12 +25,12 @@ export function useProject(projectId: string) {
   })
 }
 
-export function useProjectApplications(projectId: string) {
+export function useProjectApplications(projectId: string, enabled = true) {
   return useQuery({
     queryKey: queryKeys.projectApplications(projectId),
     queryFn: () => api.get('/api/v1/applications'),
     select: (applications) => applications.filter((application) => application.projectId === projectId),
-    enabled: Boolean(projectId),
+    enabled: Boolean(projectId) && enabled,
   })
 }
 

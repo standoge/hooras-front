@@ -1,25 +1,64 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { api } from '@/api/client'
 import { queryKeys, type QueryParams } from '@/api/hooks/query-keys'
-import type { DocumentRequirementInput, DocumentUploadInput } from '@/api/types'
+import type {
+  ApprovalStatus,
+  DocumentRequirement,
+  DocumentRequirementInput,
+  DocumentUpload,
+  DocumentUploadInput,
+} from '@/api/types'
 
 export interface DocumentFilters {
   ownerRef?: string
   status?: string
 }
 
-export function useDocumentRequirements() {
+export interface DocumentQueryOptions {
+  studentScope?: boolean
+}
+
+export type MyDocumentRequirement = DocumentRequirement & {
+  uploadStatus?: ApprovalStatus | 'missing'
+  latestUpload?: DocumentUpload
+}
+
+export function useDocumentRequirements(options?: DocumentQueryOptions) {
+  const studentScope = options?.studentScope ?? false
+
   return useQuery({
-    queryKey: queryKeys.documentRequirements,
-    queryFn: () => api.get('/api/v1/document-requirements'),
+    queryKey: studentScope ? queryKeys.myDocumentRequirements : queryKeys.documentRequirements,
+    queryFn: async () => {
+      if (studentScope) {
+        return (await api.get('/api/v1/me/document-requirements')) as unknown as MyDocumentRequirement[]
+      }
+      return api.get('/api/v1/document-requirements')
+    },
   })
 }
 
-export function useDocuments(filters?: DocumentFilters) {
-  const params = filters as QueryParams | undefined
+export function useDocuments(filters?: DocumentFilters, options?: DocumentQueryOptions) {
+  const studentScope = options?.studentScope ?? false
+  const params = !studentScope ? (filters as QueryParams | undefined) : undefined
+
   return useQuery({
-    queryKey: queryKeys.documents(params),
-    queryFn: () => api.get('/api/v1/documents', { params }),
+    queryKey: studentScope
+      ? queryKeys.myDocumentUploads
+      : queryKeys.documents(params),
+    queryFn: async () => {
+      if (studentScope) {
+        return (await api.get('/api/v1/me/document-uploads')) as unknown as DocumentUpload[]
+      }
+      return api.get('/api/v1/documents', { params })
+    },
+    select: (documents) => {
+      if (!studentScope || !filters) return documents
+      return documents.filter((doc) => {
+        if (filters.ownerRef && doc.ownerRef !== filters.ownerRef) return false
+        if (filters.status && doc.status !== filters.status) return false
+        return true
+      })
+    },
   })
 }
 
